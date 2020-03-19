@@ -16,7 +16,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
-
+app.options('/*',(req, res, next) => res.send());
 app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/orders', ordersRouter);
