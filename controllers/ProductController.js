@@ -6,7 +6,8 @@ const {
 const ProductController = {
     getAll(req, res) {
         Product.findAll({
-                include: [Category]
+                include: [Category],
+                order: [['name', 'ASC']]
             })
             .then(products => res.send(products))
     },
