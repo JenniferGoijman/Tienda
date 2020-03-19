@@ -42,7 +42,8 @@ const ProductController = {
                 id: req.params.id
             }
         })
-        .then(product => res.send(product))
+        .then(product => 
+            res.send(product))
     },
     delete(req, res) {
         Product.destroy({

@@ -17,6 +17,7 @@ const CategoryController = {
             name: req.body.name
         })
         .then(categories=>res.send(categories))
+        .catch(err => res.send('problema para insertar'))
     },
     modify(req, res) {
         Category.update({
@@ -27,6 +28,7 @@ const CategoryController = {
             }
         })
         .then(categories => res.send(categories))
+        .catch(err => res.send('problema para modificar'))
     },
     delete(req, res) {
         Category.destroy({
@@ -35,6 +37,7 @@ const CategoryController = {
             }
           })
           .then(()=>res.send('El producto se ha eliminado correctamente'))
+          .catch(err => res.send('problema para eliminar'))
       } 
 }
 
