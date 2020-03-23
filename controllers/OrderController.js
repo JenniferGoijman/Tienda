@@ -13,6 +13,7 @@ const OrderController = {
     },
     getByPK(req, res) {
         Order.findAll({
+                include: [Product],
                 where: {
                     id: req.params.orderId
                 }
@@ -21,8 +22,8 @@ const OrderController = {
     },
     insert(req, res) {
         Order.create({
-                status: "pending",
-                deliveryDate: req.body.deliveryDate
+                deliveryDate: req.body.deliveryDate,
+                status: req.body.status
             })
             .then(order => {
                 req.body.products.forEach(product => {
@@ -32,19 +33,34 @@ const OrderController = {
                         }
                     })
                 });
-                res.send(ordOrderer);
+                res.send(order);
             });
     },
     modify(req, res) {
         Order.update({
-            ...req.body
-        }, {
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(orders => res.send(orders))
-        .catch(err => res.send('problema para modificar'))
+                status: req.body.status
+            }, {
+                where: {
+                    id: req.params.id
+                }
+            })
+            .then(order => {
+                OrderProduct.destroy({
+                        where: {
+                            OrderId: req.params.id
+                        }
+                    }).then(order => {
+                        req.body.products.forEach(product => {
+                            OrderProduct.create({
+                                OrderId: req.params.id,
+                                ProductId: product[0],
+                                units: product[1]
+                            })
+                        })
+                        res.send('La orden se ha modificado correctamente')
+                    })
+                    .catch(err => res.send('Ha habido un problema para modificar la orden'))
+            }).catch(err => res.send('Ha habido un problema para modificar la orden'))
     },
     delete(req, res) {
         Order.destroy({
